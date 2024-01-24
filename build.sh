@@ -67,12 +67,12 @@ _prepare_foxhound() {
     _status "Setting default mozconfig from Ubuntu profile"
     cp "$FOXHOUND_DIR/taintfox_mozconfig_ubuntu" "$FOXHOUND_DIR/.mozconfig"	
   fi
+  ./mach --no-interactive clobber
+  ./mach --no-interactive bootstrap --no-system-changes --application-choice=browser
   if [ ! -d "$FOXHOUND_OBJ_DIR" ]; then
     OBJ_DIR="$(grep -v -e "^#" "$FOXHOUND_DIR/.mozconfig" | grep "MOZ_OBJDIR=@TOPSRCDIR@" | cut -d "/" -f 2)"
     _die "FOXHOUND_OBJ_DIR not set, suggesting to set it to: $OBJ_DIR" 1
   fi
-  ./mach --no-interactive clobber
-  ./mach --no-interactive bootstrap --no-system-changes --application-choice=browser
 }
 
 _build_foxhound() {
