@@ -75,7 +75,10 @@ _prepare_foxhound() {
   ./mach --no-interactive clobber
   ./mach --no-interactive bootstrap --no-system-changes --application-choice=browser
   if [ ! -d "${FOXHOUND_OBJ_DIR}" ]; then
-    OBJ_DIR="$(grep -v -e "^#" "${FOXHOUND_DIR}/.mozconfig" | grep "MOZ_OBJDIR=@TOPSRCDIR@" | cut -d "/" -f 2 || _die "Unable to determine MOZ_OBJDIR and FOXHOUND_OBJ_DIR not set")"
+    OBJ_DIR="$(grep -v -e "^#" "${FOXHOUND_DIR}/.mozconfig" | grep "MOZ_OBJDIR=@TOPSRCDIR@" | cut -d "/" -f 2)"
+    if [ -n "${OBJ_DIR}" ]; then
+      _die "Unable to determine object directory from mozconfig, should be called MOZ_OBJDIR"
+    fi
     _die "FOXHOUND_OBJ_DIR not set, suggesting to set it to: ${OBJ_DIR}" 1
   fi
 }
