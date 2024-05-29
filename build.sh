@@ -64,7 +64,7 @@ _prepare_foxhound() {
   git reset --hard HEAD
   _status "Checking out Foxhound version: ${FOXHOUND_VERSION}"
   git checkout "${FOXHOUND_VERSION}"
-  git pull origin "{$FOXHOUND_VERSION}"
+  git pull origin "${FOXHOUND_VERSION}"
   if [ -d "${FOXHOUND_DIR}/juggler" ]; then
     _status "Deleting stale juggler"
     rm -rf "${FOXHOUND_DIR}/juggler"
@@ -77,10 +77,10 @@ _prepare_foxhound() {
   ./mach --no-interactive bootstrap --no-system-changes --application-choice=browser
   if [ ! -d "${FOXHOUND_OBJ_DIR}" ]; then
     OBJ_DIR="$(grep -v -e "^#" "${FOXHOUND_DIR}/.mozconfig" | grep "MOZ_OBJDIR=@TOPSRCDIR@" | cut -d "/" -f 2)"
-    if [ -n "${OBJ_DIR}" ]; then
+    if [ -z "${OBJ_DIR}" ]; then
       _die "Unable to determine object directory from mozconfig, should be called MOZ_OBJDIR"
     fi
-    _die "FOXHOUND_OBJ_DIR not set, suggesting to set it to: ${OBJ_DIR}" 1
+    _die "FOXHOUND_OBJ_DIR not set, suggesting to set it to: '${OBJ_DIR}'" 1
   fi
 }
 
