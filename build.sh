@@ -3,7 +3,7 @@
 FOXHOUND_VERSION="main" # or main for current
 #FOXHOUND_VERSION="v118.0.1" # or main for current
 FOXHOUND_OBJ_DIR="obj-tf-release" 
-PLAYWRIGHT_VERSION="release-1.41"
+PLAYWRIGHT_VERSION="release-1.42"
 
 CURRENT_DIR=$(dirname "$(readlink -f "$0" || exit 1)")
 BASEDIR=$(realpath "${CURRENT_DIR}/..")
@@ -64,6 +64,7 @@ _prepare_foxhound() {
   git reset --hard HEAD
   _status "Checking out Foxhound version: ${FOXHOUND_VERSION}"
   git checkout "${FOXHOUND_VERSION}"
+  git pull origin "{$FOXHOUND_VERSION}"
   if [ -d "${FOXHOUND_DIR}/juggler" ]; then
     _status "Deleting stale juggler"
     rm -rf "${FOXHOUND_DIR}/juggler"
