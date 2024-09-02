@@ -1,9 +1,10 @@
 #!/usr/bin/bash
 
+FOXHOUND_REMOTE="origin" # origin for default
 FOXHOUND_VERSION="main" # or main for current
-#FOXHOUND_VERSION="v118.0.1" # or main for current
+#FOXHOUND_VERSION="v121.0" # or main for current
 FOXHOUND_OBJ_DIR="obj-tf-release" 
-PLAYWRIGHT_VERSION="release-1.42"
+PLAYWRIGHT_VERSION="v1.44.0"
 
 CURRENT_DIR=$(dirname "$(readlink -f "$0" || exit 1)")
 BASEDIR=$(realpath "${CURRENT_DIR}/..")
@@ -46,7 +47,7 @@ _prepare_playwright() {
     _die "Playwright should reside in ${PLAYWRIGHT_DIR}, but this directory does not exist.."
   fi
   pushd "${PLAYWRIGHT_DIR}" > /dev/null || exit 1
-  git fetch origin
+  git fetch --all
   git reset --hard HEAD
   git checkout "$PLAYWRIGHT_VERSION"
   popd > /dev/null || exit 1
@@ -60,11 +61,11 @@ _prepare_foxhound() {
     exit 1
   fi
   pushd "${FOXHOUND_DIR}" > /dev/null || exit 1
-  git fetch origin
+  git fetch --all
   git reset --hard HEAD
   _status "Checking out Foxhound version: ${FOXHOUND_VERSION}"
-  git checkout "${FOXHOUND_VERSION}"
-  git pull origin "${FOXHOUND_VERSION}"
+  git checkout "${FOXHOUND_REMOTE}"/"${FOXHOUND_VERSION}"
+  git pull "${FOXHOUND_REMOTE}" "${FOXHOUND_VERSION}"
   if [ -d "${FOXHOUND_DIR}/juggler" ]; then
     _status "Deleting stale juggler"
     rm -rf "${FOXHOUND_DIR}/juggler"
@@ -88,7 +89,7 @@ _build_foxhound() {
   FOXHOUND_DIR="$1"
   PLAYWRIGHT_DIR="$2"
   cp -r "${PLAYWRIGHT_DIR}/browser_patches/firefox/juggler" "juggler"
-  git apply --index --whitespace=nowarn "${PLAYWRIGHT_DIR}/browser_patches/firefox/patches"/*
+  git apply --index --whitespace=nowarn --recount "${PLAYWRIGHT_DIR}/browser_patches/firefox/patches"/*
   ./mach build
 }
 
