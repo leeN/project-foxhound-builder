@@ -89,15 +89,17 @@ _build_foxhound() {
   FOXHOUND_DIR="$1"
   PLAYWRIGHT_DIR="$2"
   cp -r "${PLAYWRIGHT_DIR}/browser_patches/firefox/juggler" "juggler"
-  git apply --index --whitespace=nowarn --recount "${PLAYWRIGHT_DIR}/browser_patches/firefox/patches"/*
-  ./mach build
+  git apply --verbose --index --whitespace=nowarn --recount "${PLAYWRIGHT_DIR}/browser_patches/firefox/patches"/* || _die "Playwright patches failed to apply."
+  ./mach build || _die "./mach build error"
+
 }
 
 _package_foxhound() {
   FOXHOUND_DIR="$1"
   PLAYWRIGHT_DIR="$2"
   _status "Packaging foxhound.."
-  ./mach package
+  ./mach package || _die "./mach package error"
+
   mkdir -p "${FOXHOUND_OBJ_DIR}/dist/firefox/defaults/pref"
   cp "${PLAYWRIGHT_DIR}/browser_patches/firefox/preferences/playwright.cfg" "${FOXHOUND_OBJ_DIR}/dist/foxhound/"
   cp "${PLAYWRIGHT_DIR}/browser_patches/firefox/preferences/00-playwright-prefs.js" "${FOXHOUND_OBJ_DIR}/dist/foxhound/defaults/pref/"
