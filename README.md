@@ -1,5 +1,12 @@
 # Foxhound build script
 
+## Archived (2024-10-08)
+
+A comparable script has been merged into project foxhound. Check out the [foxhound 
+Wiki](https://github.com/SAP/project-foxhound/wiki/Building-Foxhound-(with-playwright-integration)) for the usage of the build script. In case you run into any issues, please open an issue in Foxhound!
+
+## Old Readme
+
 Automatic setup of Foxhound with Playwright integration, useful for e.g., crawling studies.
 
 ## Usage
